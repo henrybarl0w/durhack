@@ -9,7 +9,7 @@ class Dealer():
         self.players = []
         self.communityCards = []
         self.little = 0
-        self.minBet = 5
+        self.minBet = 0
         self.pot = 0
 
     def reset(self):
@@ -20,7 +20,7 @@ class Dealer():
             '2S', '3S', '4S', '5S', '6S', '7S', '8S', '9S', 'TS', 'JS', 'QS', 'KS', 'AS', 
             '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', 'TD', 'JD', 'QD', 'KD', 'AD', 
             '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', 'TC', 'JC', 'QC', 'KC', 'AC']
-        self.minBet = 5
+        self.minBet = 0
         self.little = (self.little + 1) % len(self.players)
         self.pot = 0
 
@@ -79,6 +79,8 @@ class Dealer():
             else: 
                 bets[i] = betSize
             index += 1
+
+        self.minBet = 0
         
 
         # Add all bets from this round to the pot
@@ -99,8 +101,8 @@ class Dealer():
         sbPlayer = self.players[sbIndex]
         bbPlayer = self.players[bbIndex]
 
-        sbAmount = self.minBet
-        bbAmount = self.minBet * 2
+        sbAmount = 5
+        bbAmount = 10
 
         def post(player, amount):
             stake = amount if player.getMoney() >= amount else player.getMoney()
