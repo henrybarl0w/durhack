@@ -24,7 +24,10 @@ for i in range(4):
 # start the pre-flop betting (0 = preflop, 3 = flop, 4 = turn, 5 = river)
 # game.betting(0)
 
-game.betting(5)
+game.betting(0)
+game.betting(3)
+game.betting(1)
+game.betting(1)
 
 winner = game.findBestHand()
 game.players[winner].addMoney(game.pot)
