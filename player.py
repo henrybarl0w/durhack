@@ -72,12 +72,12 @@ class Player():
 
     def bet(self, minibet):
         # input:  minimum bet permissible for this turn
-        # output: True if successful
+        # output: amount actually spent on this bet
 
         # Case I: not able to bet for this round; do nothing
         if self.__money == 0:
             print("Player has no money. Automatically passing")
-            return True
+            return 0
 
         # Case II: has money but not enough; offer fold or all-in
         elif self.__money <= minibet:
@@ -93,40 +93,42 @@ class Player():
             
             if choice == "-1":
                 # folding logic
-                pass
+                return -1
 
             elif choice == "0":
                 # all-in logic
-                pass
+                return self.__money
 
         # Case III: has more money than needed 
         elif self.__money > minibet:
+            if minibet > self.__totalRoundBet:
+                print("Balance:",self.__money)
+                print("Round bet:", minibet)
+                print("Minimum you need to add: ", minibet - self.__totalRoundBet)
+                print()
 
-            choiceMade = False
-            while not choiceMade:
-                try:
-                    choice = int(input("Turn: "))
-                except:
-                    print("Must be an integer")
+                choiceMade = False
+                while not choiceMade:
+                    try:
+                        choice = int(input("Turn: "))
+                    except:
+                        print("Must be an integer")
 
-            # check
-            if choice == 0:
-                # do nothing
-                pass
-            
+                # check
+                if choice == minibet - self.__totalRoundBet:
+                    return choice                
 
-            elif choice == -1:
-                # folding logic
-                pass
+                elif choice == -1:
+                    # folding logic
+                    return choice
 
-            elif choice > 0 and choice < self.__money:
-                # raise
-                pass
+                elif choice > minibet - self.__totalRoundBet and choice < self.__money:
+                    # raise
+                    return choice
 
-            elif choice > 0 and choice > self.__money:
-                print("More money offered than available. Offering everything")
-                # all-in logic
-                
+                elif choice > minibet - self.__totalRoundBet and choice > self.__money:
+                    print("More money offered than available. Offering everything")
+                    return self.__money
     
     def totalGameBet(self):
         return self.__totalGameBet
