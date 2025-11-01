@@ -59,7 +59,7 @@ class Dealer():
                 index += 1
                 continue
             
-            print('Player ', index % len(self.players))
+            print('\n\n\nPlayer ', index % len(self.players))
             betSize = player.bet(self.minBet)
             if betSize == -1: 
                 player.fold()
@@ -69,13 +69,14 @@ class Dealer():
             else: 
                 bets[i] = betSize
             index += 1
+        
 
         # Add all bets from this round to the pot
         for bet in bets:
             if bet is not None:
                 self.pot += bet
         
-        print("Pot size:",self.pot)
+        print("Pot size:", self.pot)
         for player in self.players:
             player.roundReset() # tell the player to update its memory of how much it's spent this round to zero (to prepare for next round)
 

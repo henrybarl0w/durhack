@@ -111,7 +111,15 @@ class Player():
         self.revealBalance()
         self.revealExistingBet()
         if minibet > self.__money and self.__money != 0:
-            self.check(minibet) # go all in
+            choice = input("You are due to pay more than you have. Would you like to (A)ll in or (F)old").lower()
+            if choice == "f":
+                self.fold()
+                return True
+            elif choice == "a":
+                self.check(minibet) # go all in
+                return True
+            else:
+                raise Exception()
 
         betAmount = input("Stake (minimum " + str(minibet) + "): ")
         is_int_amount = False
