@@ -17,7 +17,8 @@ print(deck)
 
 class Player():
     def __init__(self):
-        self.cards = []
+        self.__cards = []
+        self.__money = 0
 
     def giveCard(self, card):
         # method to give a card to a player
@@ -34,3 +35,20 @@ class Player():
             raise Exception("Please use the valid format for cards")
         
         self.cards.append(card)
+
+    def getCards(self):
+        # method to return all private cards a player has in their hand
+        return self.__cards
+    
+    def setMoney(self, nMoney):
+        self.__money = nMoney
+
+    def addMoney(self, nMoney):
+        self.__money += nMoney
+
+    def isBankrupt(self):
+        # function to be run at the start of the game for each players
+        if self.__money <= 0:
+            return True
+        return False
+
