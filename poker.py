@@ -1,16 +1,6 @@
 # Durhack 2025
 import dealer, player
 
-def generateDeck():
-    # function to generate a list that will store every possible card in the deck
-    suits = ['H','S','D','C']
-    values = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
-    deck = []
-    for suit in suits:
-        for value in values:
-            deck.append(value + suit)
-    return deck
-
 INITIALMONEY = 1000 # initial amount of money each player should have
 
 game = dealer.Dealer() # initialize a game state
