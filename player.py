@@ -5,6 +5,7 @@ class Player():
         self.__totalGameBet = 0
         self.__inGame = True
         self.__isFolded = False
+        self.__totalRoundBet = 0
 
     def totalGameBet(self):
         return self.__totalGameBet
