@@ -8,6 +8,7 @@ class Dealer():
             '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', 'TC', 'JC', 'QC', 'KC', 'AC']
         self.players = []
         self.communityCards = []
+        self.little = 0
 
     def reset(self):
         for player in self.players:
@@ -26,5 +27,12 @@ class Dealer():
 
     # Deals with a round of betting and shows n number of cards at the start
     def betting(self, n):
+        minBet = 0
         for i in range(n):
             self.communityCards.append(self.deck.pop())
+        for i in range(self.little, self.little+len(self.players)):
+            j = i % len(self.players)
+            player = self.players[j]
+        if not player.isFolded(): betSize = player.bet(minBet)
+        if betSize == -1: player.fold()
+        elif betSize > minBet: minBet = betSize
