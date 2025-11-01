@@ -55,3 +55,106 @@ class Dealer():
             index += 1
         for player in self.players:
             player.roundReset()
+
+    def orderHand(self, h):
+        cardOrder = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
+        swapped = True
+        n = len(h)
+        while swapped and n >= 0:
+            swapped = False
+            for i in range(n-1):
+                if cardOrder.index(h[i][0:1]) > cardOrder.index(h[i+1][0:1]):
+                    temp = h[i]
+                    h[i] = h[i+1]
+                    h[i+1] = temp
+                    swapped = True
+            n -= 1
+        return h
+
+    def rankHand(self, h):
+        h = self.orderHand(h)
+        cardOrder = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
+        # Check for same suit
+        sameSuit = True
+        s = h[0][1:2]
+        for i in range(1, len(h)):
+            if h[i][1:2] != s:
+                sameSuit = False
+                break
+        # Check for consecutive cards 
+        consecutive = True
+        last = cardOrder.index(h[0][0:1])
+        for i in range(1, len(h)):
+            current = cardOrder.index(h[i][0:1])
+            if current != last + 1:
+                consecutive = False
+                break
+            last = current
+
+        if sameSuit and consecutive:
+            if h[4][0:1] == 'A': return (10, 0) #'royal flush'
+            return (9, 0) #'straight flush'
+        
+        # Count repeated cards
+        count = [] # [card, count]
+        for c in h:
+            found = False
+            for card in count:
+                if c[0:1] in card:
+                    card[1] += 1
+                    found = True
+                    break
+            if not found: count.append([c[0:1], 1])
+
+        m = 0
+        a, b = 0, 0
+        for card in count:
+            if card[1] > m:
+                m = card[1]
+                a = cardOrder.index(card[0])
+            if cardOrder.index(card[0]) > b: b = cardOrder.index(card[0])
+        if m == 4:
+            return (8, 0) #'four of kind'
+        
+        if m == 3 and (count[0][1] == 2 or count[1][1] == 2):
+            return (7, 0) #'full house'
+        
+        if sameSuit:
+            return (6, 0) #'flush'
+        
+        if consecutive:
+            return (5, 0) #'straight'
+        
+        if m == 3:
+            return (4, 0) #'three of kind'
+        
+        if m == 2:
+            pairs = 0
+            for i in range(len(count)):
+                if count[i][1] == 2: pairs += 1
+            if pairs == 2:
+                return (3, 0) #'two pairs'
+            return (2, a) #'pair'
+        return (1, b) #'highest card'
+
+    def draw(self, h1, h2):
+        cardOrder = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
+        h1, h2 = self.orderHand(h1), self.orderHand(h2)
+        for i in range(len(h1)-1,-1,-1):
+            if h1[i][0:1] != h2[i][0:1]:
+                if cardOrder.index(h1[i][0:1]) > cardOrder.index(h2[i][0:1]):
+                    return True
+                return False
+            
+    def findBestHand(self):
+        for player in self.players:
+            if player.isFolded(): continue
+            cards = player.getCards() + self.communityCards
+            hands = []
+            for i in range(len(cards)):
+                for j in range(i,len(cards)):
+                    hand = []
+                    for k in range(len(cards)):
+                        if k not in [i,j]:
+                            hand.append(cards[k])
+                    hands.append(hand)
