@@ -67,7 +67,7 @@ class Dealer():
                 index += 1
                 continue
             
-            print('\n\n\nPlayer ', index % len(self.players))
+            print('\n\n\n\n\n\n\n\nPlayer ', index % len(self.players))
             print(player.getCards())
 
             betSize = player.bet(self.minBet)
