@@ -11,7 +11,7 @@ class Player():
         self.__roundStartMoney = self.__money
         # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
-    def addToRoundBet(self, nAmount):
+    def letRoundBetBe(self, nAmount):
         self.__totalRoundBet = nAmount
 
     def isAllIn(self):
@@ -72,7 +72,7 @@ class Player():
 
         if self.__money <= bet_difference:
             # Logic for going all in
-            self.addToRoundBet(self.__money)
+            self.letRoundBetBe(self.__money)
             self.__money = 0
             self.__isAllIn = True
             return "allin"
@@ -96,7 +96,7 @@ class Player():
         
         # ELSE RAISE LOGIC GOES HERE
         self.__money = self.__roundStartMoney - betAmount
-        self.addToRoundBet(betAmount)
+        self.letRoundBetBe(betAmount)
         return True
     
     def revealBalance(self):
