@@ -173,6 +173,7 @@ class Dealer():
                 return False
             
     def findBestHand(self):
+        bestHands = []
         for player in self.players:
             if player.isFolded(): continue
             cards = player.getCards() + self.communityCards
@@ -191,4 +192,13 @@ class Dealer():
                 if a > rank[0] or (a == rank[0] and (b > rank[1] or (b == rank[1] and self.draw(hand, bestHand)))):
                     rank = (a, b)
                     bestHand = hand
-            print(bestHand, rank)
+            bestHands.append(bestHand)
+
+        bestHand = None
+        rank = (0, 0)
+        for hand in bestHands:
+            a, b = self.rankHand(hand)
+            if a > rank[0] or (a == rank[0] and (b > rank[1] or (b == rank[1] and self.draw(hand, bestHand)))):
+                rank = (a, b)
+                bestHand = hand
+        print(bestHand, rank, bestHands.index(bestHand))
