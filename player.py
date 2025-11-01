@@ -22,6 +22,9 @@ class Player:
         """Resets round-specific betting values."""
         self.__betRound = 0
 
+    def letRoundBetBe(self, n):
+        self.__betRound = n
+
     # ------------------------------
     # Money Management
     # ------------------------------
