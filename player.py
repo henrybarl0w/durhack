@@ -11,6 +11,7 @@ class Player():
     
     def roundReset(self):
         self.__totalRoundBet = 0
+        # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
     def gameReset(self):
         self.__totalGameBet = 0
@@ -94,11 +95,14 @@ class Player():
     def revealBalance(self):
         print("Balance:", self.__money)
 
+    def revealExistingBet(self):
+        print("Existing bet for this round:", self.__totalRoundBet)
     
     def bet(self, minibet):
         # input: minibet - smallest possible bet permissible
         # output: true if successful
         self.revealBalance()
+        self.revealExistingBet()
         print("Current bet: " + str(self.__betAmount))
         betAmount = int(input("Stake (minimum " + str(minibet) + "): "))
         if betAmount == -1:
