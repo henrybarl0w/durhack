@@ -1,128 +1,142 @@
-class Player:
+class Player():
     def __init__(self):
         self.__cards = []
         self.__money = 0
-        self.__betRound = 0      # bet amount in current betting round
-        self.__betGame = 0       # cumulative bet in current game
+        self.__totalGameBet = 0
         self.__isFolded = False
         self.__isAllIn = False
-
-    # ------------------------------
-    # Game and Round Reset
-    # ------------------------------
-    def gameReset(self):
-        """Resets player state for a new game."""
-        self.__betGame = 0
-        self.__isFolded = False
-        self.__isAllIn = False
-        self.__cards.clear()
-        self.roundReset()
+        self.__roundStartMoney = 0
+        self.__hasPlayedThisRound = False
 
     def roundReset(self):
-        """Resets round-specific betting values."""
-        self.__betRound = 0
+        self.__roundStartMoney = self.__money
+        # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
-    def letRoundBetBe(self, n):
-        self.__betRound = n
+    def letRoundBetBe(self, nAmount):
+        self.__totalRoundBet = nAmount
 
-    # ------------------------------
-    # Money Management
-    # ------------------------------
-    def setMoney(self, amount):
-        self.__money = amount
+    def hasPlayedThisRound(self):
+        self.__hasPlayedThisRound = True
 
-    def addMoney(self, amount):
-        self.__money += amount
+
+    def getBetForThisRound(self):
+        return self.__totalRoundBet
+
+    def isAllIn(self):
+        return self.__isAllIn
+
+    def gameReset(self):
+        self.__totalGameBet = 0
+        self.__inGame = True
+        self.roundReset()
+        
+    def giveCard(self, card):
+        # method to give a card to a player
+        # input: 2-char string eg "2H"
+
+        # ensure that the hand is not already full
+        if len(self.__cards) >= 2:
+            raise Exception("Player hand is already full")
+        
+        # ensure the card is in the valid format, eg 2S, AQ
+        if len(card) != 2:
+            raise Exception("Please use the valid format for cards")
+        
+        if card[0] not in "23456789TJQKA" or card[1] not in "HSDC":
+            raise Exception("Please use the valid format for cards")
+        
+        self.__cards.append(card)
+
+    def getCards(self):
+        # method to return all private cards a player has in their hand
+        return self.__cards
+    
+    def clearCards(self):
+        self.__cards = []
+    
+    def setMoney(self, nMoney):
+        self.__money = nMoney
+        self.__roundStartMoney = nMoney
 
     def getMoney(self):
         return self.__money
 
+    def addMoney(self, nMoney):
+        self.__money += nMoney
+
     def isBankrupt(self):
-        return self.__money <= 0
+        # function to be run at the start of the game for each players
+        if self.__money <= 0:
+            return True
+        return False
 
-    # ------------------------------
-    # Cards
-    # ------------------------------
-    def giveCard(self, card):
-        if len(self.__cards) >= 2:
-            raise Exception("Player hand is already full")
+    def bet(self, minibet):
+        # input:  minimum bet permissible for this turn
+        # output: True if successful
 
-        if len(card) != 2 or card[0] not in "23456789TJQKA" or card[1] not in "HSDC":
-            raise Exception("Invalid card format")
-
-        self.__cards.append(card)
-
-    def getCards(self):
-        return list(self.__cards)
-
-    # ------------------------------
-    # Betting
-    # ------------------------------
-    def bet(self, minBet):
-        """Handles player betting for one turn."""
-        if self.__isFolded or self.__isAllIn:
-            print("Player cannot act (folded or all-in).")
-            return False
-
+        # Case I: not able to bet for this round; do nothing
         if self.__money == 0:
-            print("Player has no money. Automatically passing.")
+            print("Player has no money. Automatically passing")
             return True
 
-        print(f"You have ${self.__money}. Minimum to call is ${minBet}.")
-        print("Enter -1 to fold, 0 to call/check, or a positive number to raise:")
+        # Case II: has money but not enough; offer fold or all-in
+        elif self.__money <= minibet:
+            print("You have", self.__money, "but you need",minibet)
+            print("You have the option to go ALL IN")
+            print("In this case you will double your money if you win this round, or be bust if you lose it")
+            print("You also have the choice of folding, in which case you will be out of this round but retain your money")
+            print("Do you Fold (-1) or go All-in (0)? ")
+            print()
+            choice = input("Turn: ")
+            while choice != "-1" and choice != "0":
+                choice = input("Turn: ")
+            
+            if choice == "-1":
+                # folding logic
+                pass
 
-        while True:
-            try:
-                choice = int(input("Your bet: "))
-                break
-            except ValueError:
-                print("Please enter an integer.")
+            elif choice == "0":
+                # all-in logic
+                pass
 
-        if choice == -1:
-            self.fold()
-            print("Player folds.")
-            return True
+        # Case III: has more money than needed 
+        elif self.__money > minibet:
 
-        elif choice == 0:
-            # call/check
-            betAmount = min(minBet, self.__money)
-            self.__money -= betAmount
-            self.__betRound += betAmount
-            self.__betGame += betAmount
-            if self.__money == 0:
-                self.__isAllIn = True
-            print(f"Player calls with ${betAmount}.")
-            return True
+            choiceMade = False
+            while not choiceMade:
+                try:
+                    choice = int(input("Turn: "))
+                except:
+                    print("Must be an integer")
 
-        elif choice > 0:
-            if choice >= self.__money:
-                choice = self.__money
-                self.__isAllIn = True
-                print("Player goes all-in!")
+            # check
+            if choice == 0:
+                # do nothing
+                pass
+            
 
-            self.__money -= choice
-            self.__betRound += choice
-            self.__betGame += choice
-            print(f"Player bets ${choice}.")
-            return True
+            elif choice == -1:
+                # folding logic
+                pass
 
-    # ------------------------------
-    # Getters for Bets
-    # ------------------------------
-    def getBetForThisRound(self):
-        return self.__betRound
+            elif choice > 0 and choice < self.__money:
+                # raise
+                pass
 
-    def getBetForThisGame(self):
-        return self.__betGame
-
-    # ------------------------------
-    # Fold / All-in
-    # ------------------------------
+            elif choice > 0 and choice > self.__money:
+                print("More money offered than available. Offering everything")
+                # all-in logic
+                
+    
+    def totalGameBet(self):
+        return self.__totalGameBet
+    
     def fold(self):
         self.__isFolded = True
 
     def isFolded(self):
         return self.__isFolded
-
-    def isAllIn(self):
-        return self.__isAllIn
+    
+    def roundPass(self): 
+        # special function to run in a round after a player has gone all-in and now has no choices for the rest of the game
+        pass
