@@ -1,7 +1,7 @@
 class Player():
     def __init__(self):
         self.__cards = []
-        self.__money = 999
+        self.__money = 0
         self.__totalGameBet = 0
         self.__inGame = True
         self.__isFolded = False
@@ -53,6 +53,9 @@ class Player():
     
     def setMoney(self, nMoney):
         self.__money = nMoney
+
+    def getMoney(self):
+        return self.__money
 
     def addMoney(self, nMoney):
         self.__money += nMoney
@@ -112,7 +115,7 @@ class Player():
         # output: true if successful
         self.revealBalance()
         self.revealExistingBet()
-        if minibet < self.__money and self.__money != 0:
+        if minibet > self.__money and self.__money != 0:
             self.check(minibet) # go all in
 
         print("Current bet: " + str(self.__totalRoundBet))

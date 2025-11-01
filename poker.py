@@ -23,6 +23,7 @@ for _ in range(4):
 for i in range(len(game.players)):
     (game.players)[i].setMoney(INITIALMONEY)
 
+print("AAAAAAAAAAAA", game.players[0].getMoney())
 # deal the cards to each player
 game.deal()
 
