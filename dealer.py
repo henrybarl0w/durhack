@@ -21,6 +21,8 @@ class Dealer():
             '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', 'TD', 'JD', 'QD', 'KD', 'AD', 
             '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', 'TC', 'JC', 'QC', 'KC', 'AC']
         self.minBet = 5
+        self.little = (self.little + 1) % len(self.players)
+        self.pot = 0
 
     # Deal two cards to every player
     def deal(self):
@@ -47,23 +49,27 @@ class Dealer():
         # set the pointer to the first item in the players list, whom will be dealt to first (little blind)
         index = self.little
 
+        if n == 0:
+            self.postBlinds()
+            index = self.little + 2
+        else:
+            index = self.little
+
         bets = [None for _ in range(len(self.players))]
 
         # boolean to check that we are still going through the players for the first time
         # boolean to check that non-folded players have still not reached a bet consensus for this round
-        while index < self.little+len(self.players) or not self.equalBets(bets.copy()):
+        while (n != 0 and (index - self.little < len(self.players)) or (n == 0 and index - (self.little + 1) < len(self.players))) or not self.equalBets(bets.copy()):
             i = index % len(self.players)
             player = self.players[i]
 
-            if player.isFolded(): 
-                index += 1
-                continue
-
-            if player.isAllIn():
+            if player.isFolded() or player.isAllIn(): 
                 index += 1
                 continue
             
             print('\n\n\nPlayer ', index % len(self.players))
+            print(player.getCards())
+
             betSize = player.bet(self.minBet)
             if betSize == -1: 
                 player.fold()
@@ -84,6 +90,33 @@ class Dealer():
         for player in self.players:
             player.roundReset() # tell the player to update its memory of how much it's spent this round to zero (to prepare for next round)
 
+    def postBlinds(self):
+        for p in self.players:
+            p.roundReset()
+        
+        sbIndex = self.little % len(self.players)
+        bbIndex = (self.little + 1) % len(self.players)
+        sbPlayer = self.players[sbIndex]
+        bbPlayer = self.players[bbIndex]
+
+        sbAmount = self.minBet
+        bbAmount = self.minBet * 2
+
+        def post(player, amount):
+            stake = amount if player.getMoney() >= amount else player.getMoney()
+            player.addMoney(-stake)
+            player.letRoundBetBe(stake)
+            self.pot += stake
+            if player.getMoney() == 0:
+                player._Player__isAllIn = True
+        
+        post(sbPlayer, sbAmount)
+        post(bbPlayer, bbAmount)
+
+        self.minBet = bbAmount
+        print(f"Posted SB={sbAmount} (player {sbIndex}), BB={bbAmount} (player {bbIndex}). Pot={self.pot}")
+    
+    
     def orderHand(self, h):
         cardOrder = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
         swapped = True
