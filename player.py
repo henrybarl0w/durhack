@@ -97,12 +97,14 @@ class Player():
 
         if betAmount == minibet:
             if self.check(minibet):
-                return True
+                return betAmount
             else:
                 print("Player has gone all in!")
         else:
             if self.raiseTo(betAmount, minibet):
-                return True
+                return betAmount
+        
+        raise Exception()
     
     def fold(self):
         self.__isFolded = True
