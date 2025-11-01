@@ -1,11 +1,12 @@
 class Player():
     def __init__(self):
         self.__cards = []
-        self.__money = 999
+        self.__money = 0
         self.__totalGameBet = 0
         self.__inGame = True
         self.__isFolded = False
         self.__totalRoundBet = 0
+        self.__isAllIn = False
 
     def totalGameBet(self):
         return self.__totalGameBet
@@ -13,6 +14,13 @@ class Player():
     def roundReset(self):
         self.__totalRoundBet = 0
         # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
+
+    def addToRoundBet(self, nAmount):
+        self.__totalRoundBet += nAmount
+        self.__totalGameBet += nAmount
+
+    def isAllIn(self):
+        return self.__isAllIn
 
     def gameReset(self):
         self.__totalGameBet = 0
@@ -46,6 +54,9 @@ class Player():
     def setMoney(self, nMoney):
         self.__money = nMoney
 
+    def getMoney(self):
+        return self.__money
+
     def addMoney(self, nMoney):
         self.__money += nMoney
 
@@ -65,11 +76,14 @@ class Player():
 
         if self.__money <= bet_difference:
             # Logic for going all in
-            return False
+            self.addToRoundBet(self.__money)
+            self.__money = 0
+            self.__isAllIn = True
+            return "allin"
     
         self.__money = self.__money - bet_difference
         self.__totalGameBet += bet_difference
-        return True
+        return "checkok"
     
     def raiseTo(self, betAmount, minibet):
 
@@ -101,8 +115,20 @@ class Player():
         # output: true if successful
         self.revealBalance()
         self.revealExistingBet()
+        if minibet > self.__money and self.__money != 0:
+            self.check(minibet) # go all in
+
         print("Current bet: " + str(self.__totalRoundBet))
-        betAmount = int(input("Stake (minimum " + str(minibet) + "): "))
+        betAmount = input("Stake (minimum " + str(minibet) + "): ")
+        is_int_amount = False
+
+        while not is_int_amount:
+            try: 
+                betAmount = int(betAmount)
+                is_int_amount = True
+            except:
+                betAmount = input("Please input an integer! Stake: ")
+
         if betAmount == -1:
             self.fold()
             return True
@@ -113,14 +139,16 @@ class Player():
 
         # if they are checking (updating their bet to the same as the minimum for this round)
         if betAmount == minibet:
-            if self.check(minibet):
-                self.__totalRoundBet += betAmount
-                return betAmount
-            else:
-                print("Player has gone all in!")
+            match self.check(minibet):
+                case "checkok":
+                    return betAmount
+                case "allin":
+                    print("Player has gone all in!")
+                    self.__isAllIn = True
+                    return self.__totalGameBet
         else:
             if self.raiseTo(betAmount, minibet):
-                self.__totalRoundBet += betAmount
+                self.addToRoundBet(betAmount)
                 return betAmount
         
         raise Exception()

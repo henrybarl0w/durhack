@@ -50,11 +50,7 @@ class Dealer():
         bets = [None for _ in range(len(self.players))]
 
         # boolean to check that we are still going through the players for the first time
-        
-
         # boolean to check that non-folded players have still not reached a bet consensus for this round
-        
-
         while index < self.little+len(self.players) or not self.equalBets(bets.copy()):
             i = index % len(self.players)
             player = self.players[i]
