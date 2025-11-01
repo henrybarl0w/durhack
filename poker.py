@@ -14,3 +14,23 @@ deck = ['2H', '3H', '4H', '5H', '6H', '7H', '8H', '9H', 'TH', 'JH', 'QH', 'KH', 
 
 print(deck.pop())
 print(deck)
+
+class Player():
+    def __init__(self):
+        self.cards = []
+
+    def giveCard(self, card):
+        # method to give a card to a player
+
+        # ensure that the hand is not already full
+        if len(self.cards) >= 2:
+            raise Exception("Player hand is already full")
+        
+        # ensure the card is in the valid format, eg 2S, AQ
+        if len(card) != 2:
+            raise Exception("Please use the valid format for cards")
+        
+        if card[0] not in "23456789JQKA" or card[1] not in "HSDC":
+            raise Exception("Please use the valid format for cards")
+        
+        self.cards.append(card)
