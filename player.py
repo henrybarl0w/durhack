@@ -7,7 +7,6 @@ class Player():
     def gameReset(self):
         self.__totalGameBet = 0
         
-
     def giveCard(self, card):
         # method to give a card to a player
         # input: 2-char string eg "2H"
@@ -60,7 +59,15 @@ class Player():
         return True
     
     def raiseTo(self, betAmount):
-        #
 
         # logic to check if betAmount is greater than the max bet for this round
+        # DOES NOT CURRENTLY WORK
+        if betAmount == Game.Round.maxbet:
+            raise Exception("Cannot raise to the existing bet. Please use Player.check() instead")
+        
+        if betAmount < Game.Round.maxbet:
+            raise Exception("Cannot raise to a value less than the existing bet." \
+            "Please input something greater than" + str(Game.Round.maxbet))
+        
+        # ELSE RAISE LOGIC GOES HERE
         pass
