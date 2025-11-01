@@ -10,8 +10,11 @@ for suit in suits:
 print(deck)'''
 
 # Test
+INITIALMONEY = 1000
 game = dealer.Dealer()
 for _ in range(4): game.players.append(player.Player())
+for i in range(len(game.players)):
+    (game.players)[i].setMoney(INITIALMONEY)
 game.deal()
 for i in range(4): print(game.players[i].getCards())
 game.betting(0)
