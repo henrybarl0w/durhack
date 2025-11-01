@@ -4,7 +4,7 @@ class Player():
         self.__money = 0
         self.__totalGameBet = 0
         self.__inRound = True
-        self.__inFolded = False
+        self.__isFolded = False
 
     def gameReset(self):
         self.__totalGameBet = 0
