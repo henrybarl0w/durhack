@@ -8,9 +8,6 @@ class Player():
         self.__totalRoundBet = 0
         self.__isAllIn = False
 
-    def totalGameBet(self):
-        return self.__totalGameBet
-    
     def roundReset(self):
         self.__totalRoundBet = 0
         # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
