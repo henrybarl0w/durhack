@@ -3,15 +3,20 @@ class Player():
         self.__cards = []
         self.__money = 999
         self.__totalGameBet = 0
-        self.__inRound = True
+        self.__inGame = True
         self.__isFolded = False
 
     def totalGameBet(self):
         return self.__totalGameBet
+    
+    def roundReset(self):
+        self.__totalRoundBet = 0
+        # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
     def gameReset(self):
         self.__totalGameBet = 0
-        self.__inRound = True
+        self.__inGame = True
+        self.roundReset()
         
     def giveCard(self, card):
         # method to give a card to a player
@@ -65,6 +70,9 @@ class Player():
         self.__totalGameBet += bet_difference
         return True
     
+    def betAmount(self):
+        return self.__betAmount
+    
     def raiseTo(self, betAmount, minibet):
 
         # logic to check if betAmount is greater than the max bet for this round
@@ -86,11 +94,16 @@ class Player():
     
     def revealBalance(self):
         print("Balance:", self.__money)
+
+    def revealExistingBet(self):
+        print("Existing bet for this round:", self.__totalRoundBet)
     
     def bet(self, minibet):
         # input: minibet - smallest possible bet permissible
         # output: true if successful
         self.revealBalance()
+        self.revealExistingBet()
+        print("Current bet: " + str(self.__betAmount))
         betAmount = int(input("Stake (minimum " + str(minibet) + "): "))
         if betAmount == -1:
             self.fold()
@@ -103,11 +116,13 @@ class Player():
         # if they are checking (updating their bet to the same as the minimum for this round)
         if betAmount == minibet:
             if self.check(minibet):
+                self.__totalRoundBet += betAmount
                 return betAmount
             else:
                 print("Player has gone all in!")
         else:
             if self.raiseTo(betAmount, minibet):
+                self.__totalRoundBet += betAmount
                 return betAmount
         
         raise Exception()
