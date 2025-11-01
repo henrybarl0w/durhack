@@ -169,15 +169,33 @@ class Dealer():
                 return False
             
     def findBestHand(self):
+        bestHands = []
         for player in self.players:
             if player.isFolded(): continue
             cards = player.getCards() + self.communityCards
             hands = []
-            for i in range(len(cards)):
-                for j in range(i,len(cards)):
+            for i in range(len(cards)-1):
+                for j in range(i+1,len(cards)):
                     hand = []
-                    for k in range(5):
+                    for k in range(len(cards)):
                         if k not in [i,j]:
                             hand.append(cards[k])
                     hands.append(hand)
-        return hands
+            bestHand = None
+            rank = (0, 0)
+            for hand in hands:
+                a, b = self.rankHand(hand)
+                if a > rank[0] or (a == rank[0] and (b > rank[1] or (b == rank[1] and self.draw(hand, bestHand)))):
+                    rank = (a, b)
+                    bestHand = hand
+            bestHands.append(bestHand)
+
+        # Finds the best hand out of each players best hand
+        bestHand = None
+        rank = (0, 0)
+        for hand in bestHands:
+            a, b = self.rankHand(hand)
+            if a > rank[0] or (a == rank[0] and (b > rank[1] or (b == rank[1] and self.draw(hand, bestHand)))):
+                rank = (a, b)
+                bestHand = hand
+        print(bestHand, rank, bestHands.index(bestHand))
