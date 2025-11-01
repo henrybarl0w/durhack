@@ -117,9 +117,22 @@ class Player():
                 return True
             elif choice == "a":
                 self.check(minibet) # go all in
+                self.__isAllIn = True
                 return True
             else:
                 raise Exception()
+            
+        # if player ran out of money earlier this round
+        try:
+            assert (minibet > self.__money and self.__money == 0 and self.__roundStartMoney != 0) == self.__isAllIn
+        except:
+            print((minibet > self.__money and self.__money == 0 and self.__roundStartMoney != 0))
+            print(self.__isAllIn)
+
+            
+        if minibet > self.__money and self.__money == 0 and self.__roundStartMoney != 0:
+            print("Turn being skipped for this player")
+            return True
 
         betAmount = input("Stake (minimum " + str(minibet) + "): ")
         is_int_amount = False
