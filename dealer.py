@@ -28,13 +28,20 @@ class Dealer():
         for _ in range(2): 
             for player in self.players: player.giveCard(self.deck.pop())
 
+    def equalBets(self, bets):
+        for i in range(bets.count(None)):
+            bets.remove(None)
+        if len(set(bets)) == 1: return True
+        return False
+
     # Deals with a round of betting and shows n number of cards at the start
     def betting(self, n):
         for i in range(n):
             self.communityCards.append(self.deck.pop())
         print(self.communityCards)
         index = self.little
-        while index < self.little+len(self.players) or not all(bets.totalGameBet() == self.players[0].totalGameBet() for bets in self.players):
+        bets = [None for i in range(len(self.players))]
+        while index < self.little+len(self.players) or not self.equalBets(bets):
             player = self.players[index % len(self.players)]
             if player.isFolded(): continue
             print('Player ', index % len(self.players))
@@ -43,6 +50,8 @@ class Dealer():
                 player.fold()
             elif betSize > self.minBet: 
                 self.minBet = betSize
+                bets[index % len(self.players)] = betSize
+            else: bets[index % len(self.players)] = betSize
             index += 1
-
-            
+        for player in self.players:
+            player.roundReset()
