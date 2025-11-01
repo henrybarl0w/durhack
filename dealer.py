@@ -56,6 +56,7 @@ class Dealer():
             player = self.players[i]
 
             if player.isFolded(): 
+                index += 1
                 continue
             
             print('Player ', index % len(self.players))
@@ -198,5 +199,5 @@ class Dealer():
             if a > rank[0] or (a == rank[0] and (b > rank[1] or (b == rank[1] and self.draw(hand, bestHand)))):
                 rank = (a, b)
                 bestHand = hand
-                
+
         return bestHands.index(bestHand)
