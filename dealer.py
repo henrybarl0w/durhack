@@ -10,6 +10,7 @@ class Dealer():
         self.communityCards = []
         self.little = 0
         self.minBet = 5
+        self.pot = 0
 
     def reset(self):
         for player in self.players:
@@ -31,13 +32,12 @@ class Dealer():
     def betting(self, n):
         for i in range(n):
             self.communityCards.append(self.deck.pop())
-        #for i in range(self.little, self.little+len(self.players)):
-        count = 0
         index = self.little
-        while index < self.little+len(self.players) and count != len(self.players) - 1:
+        while index < self.little+len(self.players) or not all(bets.totalGameBet() == self.players[0].totalGameBet() for bets in self.players):
             player = self.players[index % len(self.players)]
-            if not player.isFolded(): 
-                betSize = player.bet(self.minBet)
+            if player.isFolded(): continue
+            print('Player ', index % len(self.players))
+            betSize = player.bet(self.minBet)
             if betSize == -1: 
                 player.fold()
             elif betSize > self.minBet: 
@@ -45,3 +45,6 @@ class Dealer():
                 count = 0
             elif betSize == self.minBet: 
                 count += 1
+            index += 1
+
+            
