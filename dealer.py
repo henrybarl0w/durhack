@@ -61,4 +61,4 @@ class Dealer():
         
         print("Pot size:",self.pot)
         for player in self.players:
-            player.roundReset()
+            player.roundReset() # tell the player to update its memory of how much it's spent this round to zero (to prepare for next round)
