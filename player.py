@@ -61,16 +61,16 @@ class Player():
         self.__money = self.__money - bet_difference
         return True
     
-    def raiseTo(self, betAmount):
+    def raiseTo(self, betAmount, minibet):
 
         # logic to check if betAmount is greater than the max bet for this round
         # DOES NOT CURRENTLY WORK
-        if betAmount == Game.Round.maxbet:
+        if betAmount == minibet:
             raise Exception("Cannot raise to the existing bet. Please use Player.check() instead")
         
-        if betAmount < Game.Round.maxbet:
+        if betAmount < minibet:
             raise Exception("Cannot raise to a value less than the existing bet." \
-            "Please input something greater than" + str(Game.Round.maxbet))
+            "Please input something greater than" + str(minibet))
         
         if betAmount > self.__money:
             raise Exception("Player does not have enough money to make this raise")
@@ -101,7 +101,7 @@ class Player():
             else:
                 print("Player has gone all in!")
         else:
-            if self.raiseTo(betAmount):
+            if self.raiseTo(betAmount, minibet):
                 return True
     
     def fold(self):
