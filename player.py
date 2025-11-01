@@ -7,14 +7,15 @@ class Player():
         self.__isFolded = False
         self.__totalRoundBet = 0
         self.__isAllIn = False
+        self.__roundStartMoney = 0
 
     def roundReset(self):
         self.__totalRoundBet = 0
+        self.__roundStartMoney = self.__money
         # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
     def addToRoundBet(self, nAmount):
-        self.__totalRoundBet += nAmount
-        self.__totalGameBet += nAmount
+        self.__totalRoundBet = nAmount
 
     def isAllIn(self):
         return self.__isAllIn
@@ -50,6 +51,7 @@ class Player():
     
     def setMoney(self, nMoney):
         self.__money = nMoney
+        self.__roundStartMoney = nMoney
 
     def getMoney(self):
         return self.__money
@@ -78,7 +80,7 @@ class Player():
             self.__isAllIn = True
             return "allin"
     
-        self.__money = self.__money - bet_difference
+        self.__money = self.__roundStartMoney - bet_difference
         return "checkok"
     
     def raiseTo(self, betAmount, minibet):
@@ -96,7 +98,7 @@ class Player():
             raise Exception("Player does not have enough money to make this raise")
         
         # ELSE RAISE LOGIC GOES HERE
-        self.__money -= betAmount
+        self.__money = self.__roundStartMoney - betAmount
         self.addToRoundBet(betAmount)
         return True
     
@@ -104,7 +106,7 @@ class Player():
         print("Balance:", self.__money)
 
     def revealExistingBet(self):
-        print("Existing bet for this round:", self.__totalRoundBet)
+        print("Current bet:", self.__roundStartMoney - self.__money)
     
     def bet(self, minibet):
         # input: minibet - smallest possible bet permissible
@@ -114,7 +116,6 @@ class Player():
         if minibet > self.__money and self.__money != 0:
             self.check(minibet) # go all in
 
-        print("Current bet: " + str(self.__totalRoundBet))
         betAmount = input("Stake (minimum " + str(minibet) + "): ")
         is_int_amount = False
 
