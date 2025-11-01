@@ -82,7 +82,6 @@ class Player():
             return "allin"
     
         self.__money = self.__money - bet_difference
-        self.__totalGameBet += bet_difference
         return "checkok"
     
     def raiseTo(self, betAmount, minibet):
@@ -101,7 +100,7 @@ class Player():
         
         # ELSE RAISE LOGIC GOES HERE
         self.__money -= betAmount
-        self.__totalGameBet += betAmount
+        self.addToRoundBet(betAmount)
         return True
     
     def revealBalance(self):
@@ -148,7 +147,6 @@ class Player():
                     return self.__totalGameBet
         else:
             if self.raiseTo(betAmount, minibet):
-                self.addToRoundBet(betAmount)
                 return betAmount
         
         raise Exception()
