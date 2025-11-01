@@ -6,6 +6,9 @@ class Player():
         self.__inRound = True
         self.__isFolded = False
 
+    def totalGameBet(self):
+        return self.__totalGameBet
+
     def gameReset(self):
         self.__totalGameBet = 0
         self.__inRound = True
@@ -59,6 +62,7 @@ class Player():
             return False
     
         self.__money = self.__money - bet_difference
+        self.__totalGameBet += bet_difference
         return True
     
     def raiseTo(self, betAmount, minibet):
@@ -77,6 +81,7 @@ class Player():
         
         # ELSE RAISE LOGIC GOES HERE
         self.__money -= betAmount
+        self.__totalGameBet += betAmount
         return True
     
     def revealBalance(self):
@@ -95,6 +100,7 @@ class Player():
         while betAmount > self.__money or betAmount < minibet:
             betAmount = int(input("Bet error! Stake (minimum " + str(minibet) + "): "))
 
+        # if they are checking (updating their bet to the same as the minimum for this round)
         if betAmount == minibet:
             if self.check(minibet):
                 return betAmount
@@ -105,6 +111,9 @@ class Player():
                 return betAmount
         
         raise Exception()
+    
+    def totalGameBet(self):
+        return self.__totalGameBet
     
     def fold(self):
         self.__isFolded = True
