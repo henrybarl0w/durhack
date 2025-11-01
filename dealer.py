@@ -70,14 +70,18 @@ class Dealer():
             print('\n\n\n\n\n\n\n\nPlayer ', index % len(self.players))
             print(player.getCards())
 
-            betSize = player.bet(self.minBet)
+            betSize = player.bet(self.minBet) # trusts that Player.bet() will give a bet greater than minimum possible
             if betSize == -1: 
                 player.fold()
             elif betSize > self.minBet: 
                 self.minBet = betSize
                 bets[i] = betSize
+                player.addMoney(-betSize)
+                player.addToRoundBet(betSize)
             else: 
                 bets[i] = betSize
+                player.addMoney(-betSize)
+                player.addToRoundBet(betSize)
             index += 1
         
 

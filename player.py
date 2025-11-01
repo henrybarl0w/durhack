@@ -13,8 +13,8 @@ class Player():
         self.__roundStartMoney = self.__money
         # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
-    def letRoundBetBe(self, nAmount):
-        self.__totalRoundBet = nAmount
+    def addToRoundBet(self, nAmount):
+        self.__totalRoundBet += nAmount
 
     def hasPlayedThisRound(self):
         self.__hasPlayedThisRound = True
@@ -117,7 +117,6 @@ class Player():
                     except:
                         print("Must be an integer")
 
-                
 
                 # check
                 if choice == minibet - self.__totalRoundBet:
