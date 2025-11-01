@@ -34,16 +34,33 @@ class Dealer():
         if len(set(bets)) == 1: return True
         return False
 
-    # Deals with a round of betting and shows n number of cards at the start
     def betting(self, n):
-        for i in range(n):
+        # Deals with a round of betting and shows n number of cards at the start
+
+        # Iteratively assign n community cards from the top of the deck
+        for i in range(n): # for flop n=3, for turn and river n=1
             self.communityCards.append(self.deck.pop())
-        print(self.communityCards)
+
+        # test that the assignment has worked correctly
+        print(self.communityCards) # (this is true, so this line may be removed)
+
+        # set the pointer to the first item in the players list, whom will be dealt to first (little blind)
         index = self.little
+
         bets = [None for i in range(len(self.players))]
-        while index < self.little+len(self.players) or not self.equalBets(bets):
+
+        # boolean to check that we are still going through the players for the first time
+        neverCompletedList = index < self.little+len(self.players)
+
+        # boolean to check that non-folded players have still not reached a bet consensus for this round
+        betsUnequal = not self.equalBets(bets)
+
+        while neverCompletedList or betsUnequal:
             player = self.players[index % len(self.players)]
-            if player.isFolded(): continue
+
+            if player.isFolded(): 
+                continue
+            
             print('Player ', index % len(self.players))
             betSize = player.bet(self.minBet)
             if betSize == -1: 
