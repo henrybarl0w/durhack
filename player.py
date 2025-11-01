@@ -1,7 +1,7 @@
 class Player():
     def __init__(self):
         self.__cards = []
-        self.__money = 0
+        self.__money = 999
         self.__totalGameBet = 0
         self.__inRound = True
         self.__isFolded = False
