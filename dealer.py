@@ -21,6 +21,8 @@ class Dealer():
             '2D', '3D', '4D', '5D', '6D', '7D', '8D', '9D', 'TD', 'JD', 'QD', 'KD', 'AD', 
             '2C', '3C', '4C', '5C', '6C', '7C', '8C', '9C', 'TC', 'JC', 'QC', 'KC', 'AC']
         self.minBet = 5
+        self.little = (self.little + 1) % len(self.players)
+        self.pot = 0
 
     # Deal two cards to every player
     def deal(self):
