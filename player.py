@@ -71,9 +71,6 @@ class Player():
         self.__totalGameBet += bet_difference
         return True
     
-    def betAmount(self):
-        return self.__betAmount
-    
     def raiseTo(self, betAmount, minibet):
 
         # logic to check if betAmount is greater than the max bet for this round
@@ -104,7 +101,7 @@ class Player():
         # output: true if successful
         self.revealBalance()
         self.revealExistingBet()
-        print("Current bet: " + str(self.__betAmount))
+        print("Current bet: " + str(self.__totalRoundBet))
         betAmount = int(input("Stake (minimum " + str(minibet) + "): "))
         if betAmount == -1:
             self.fold()
