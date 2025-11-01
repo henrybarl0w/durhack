@@ -3,14 +3,11 @@ class Player():
         self.__cards = []
         self.__money = 0
         self.__totalGameBet = 0
-        self.__inGame = True
         self.__isFolded = False
-        self.__totalRoundBet = 0
         self.__isAllIn = False
         self.__roundStartMoney = 0
 
     def roundReset(self):
-        self.__totalRoundBet = 0
         self.__roundStartMoney = self.__money
         # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
