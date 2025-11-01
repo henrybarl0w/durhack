@@ -32,6 +32,7 @@ class Dealer():
     def betting(self, n):
         for i in range(n):
             self.communityCards.append(self.deck.pop())
+        print(self.communityCards)
         index = self.little
         while index < self.little+len(self.players) or not all(bets.totalGameBet() == self.players[0].totalGameBet() for bets in self.players):
             player = self.players[index % len(self.players)]
@@ -42,9 +43,6 @@ class Dealer():
                 player.fold()
             elif betSize > self.minBet: 
                 self.minBet = betSize
-                count = 0
-            elif betSize == self.minBet: 
-                count += 1
             index += 1
 
             
