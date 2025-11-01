@@ -53,5 +53,12 @@ class Dealer():
                 bets[index % len(self.players)] = betSize
             else: bets[index % len(self.players)] = betSize
             index += 1
+
+        # Add all bets from this round to the pot
+        for bet in bets:
+            if bet is not None:
+                self.pot += bet
+        
+        print("Pot size:",self.pot)
         for player in self.players:
             player.roundReset()
