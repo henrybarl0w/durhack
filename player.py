@@ -4,6 +4,7 @@ class Player():
         self.__money = 0
         self.__totalGameBet = 0
         self.__inRound = True
+        self.__inFolded = False
 
     def gameReset(self):
         self.__totalGameBet = 0
@@ -78,11 +79,36 @@ class Player():
         self.__money -= betAmount
         return True
     
-    def fold(self):
-        self.__inRound = False
+    def revealBalance(self):
+        print("Balance:", self.__money)
+    
+    def bet(self, minibet):
+        # input: minibet - smallest possible bet permissible
+        # output: true if successful
+        self.revealBalance()
+        betAmount = int(input("Stake (minimum " + str(minibet) + "): "))
+        if betAmount == -1:
+            self.fold()
+            return True
 
-    def isInRound(self):
-        return self.__inRound
+        # if bet is too large for balance or too small to match
+        while betAmount > self.__money or betAmount < minibet:
+            betAmount = int(input("Bet error! Stake (minimum " + str(minibet) + "): "))
+
+        if betAmount == minibet:
+            if self.check(minibet):
+                return True
+            else:
+                print("Player has gone all in!")
+        else:
+            if self.raiseTo(betAmount):
+                return True
+    
+    def fold(self):
+        self.__isFolded = True
+
+    def isFolded(self):
+        return self.__isFolded
     
     def roundPass(self): 
         # special function to run in a round after a player has gone all-in and now has no choices for the rest of the game
