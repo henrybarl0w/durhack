@@ -60,7 +60,7 @@ class Dealer():
 
             if player.isFolded(): 
                 continue
-            
+
             print('Player ', index % len(self.players))
             betSize = player.bet(self.minBet)
             if betSize == -1: 
