@@ -194,6 +194,7 @@ class Dealer():
                     bestHand = hand
             bestHands.append(bestHand)
 
+        # Finds the best hand out of each players best hand
         bestHand = None
         rank = (0, 0)
         for hand in bestHands:
