@@ -7,6 +7,7 @@ class Player():
         self.__isAllIn = False
         self.__roundStartMoney = 0
         self.__hasPlayedThisRound = False
+        self.__totalRoundBet = 0
 
     def roundReset(self):
         self.__roundStartMoney = self.__money
@@ -101,7 +102,6 @@ class Player():
 
         # Case III: has more money than needed 
         elif self.__money > minibet:
-            if minibet > self.__totalRoundBet:
                 print("Balance:",self.__money)
                 print("Round bet:", minibet)
                 print("Minimum you need to add: ", minibet - self.__totalRoundBet)
@@ -111,23 +111,36 @@ class Player():
                 while not choiceMade:
                     try:
                         choice = int(input("Turn: "))
+                        while choice < minibet - self.__totalRoundBet:
+                            choice = int(input("Must be greater than minimum! Turn: "))
+                        choiceMade = True
                     except:
                         print("Must be an integer")
 
+                
+
                 # check
                 if choice == minibet - self.__totalRoundBet:
+                    print("Check to", choice)
                     return choice                
 
                 elif choice == -1:
                     # folding logic
+                    print("Folding")
                     return choice
 
                 elif choice > minibet - self.__totalRoundBet and choice < self.__money:
                     # raise
+                    print("Raising to", choice)
                     return choice
 
                 elif choice > minibet - self.__totalRoundBet and choice > self.__money:
                     print("More money offered than available. Offering everything")
+                    return self.__money
+                
+                else:
+                    print("ERROR OCCURED: THIS LINE SHOULD NOT BE VISIBLE")
+                    print("balance:",self.__money, "minibet",minibet, "bet this round", self.__totalRoundBet)
                     return self.__money
     
     def totalGameBet(self):
