@@ -31,10 +31,7 @@ for i in range(4):
     print(game.players[i].getCards())
 
 # start the pre-flop betting (0 = preflop, 3 = flop, 4 = turn, 5 = river)
-game.betting(0)
+#game.betting(0)
 
-for i in range(4): print(game.players[i].getCards())
-game.betting(0)
-game.betting(3)
-game.betting(1)
-game.betting(1)
+game.betting(5)
+game.findBestHand()
