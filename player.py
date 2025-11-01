@@ -1,184 +1,125 @@
-class Player():
+class Player:
     def __init__(self):
         self.__cards = []
         self.__money = 0
-        self.__totalGameBet = 0
+        self.__betRound = 0      # bet amount in current betting round
+        self.__betGame = 0       # cumulative bet in current game
         self.__isFolded = False
         self.__isAllIn = False
-        self.__roundStartMoney = 0
+
+    # ------------------------------
+    # Game and Round Reset
+    # ------------------------------
+    def gameReset(self):
+        """Resets player state for a new game."""
+        self.__betGame = 0
+        self.__isFolded = False
+        self.__isAllIn = False
+        self.__cards.clear()
+        self.roundReset()
 
     def roundReset(self):
-        self.__roundStartMoney = self.__money
-        # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
+        """Resets round-specific betting values."""
+        self.__betRound = 0
 
-    def letRoundBetBe(self, nAmount):
-        self.__totalRoundBet = nAmount
+    # ------------------------------
+    # Money Management
+    # ------------------------------
+    def setMoney(self, amount):
+        self.__money = amount
 
-    def getBetForThisRound(self):
-        return self.__totalRoundBet
-
-    def isAllIn(self):
-        return self.__isAllIn
-
-    def gameReset(self):
-        self.__totalGameBet = 0
-        self.__inGame = True
-        self.roundReset()
-        
-    def giveCard(self, card):
-        # method to give a card to a player
-        # input: 2-char string eg "2H"
-
-        # ensure that the hand is not already full
-        if len(self.__cards) >= 2:
-            raise Exception("Player hand is already full")
-        
-        # ensure the card is in the valid format, eg 2S, AQ
-        if len(card) != 2:
-            raise Exception("Please use the valid format for cards")
-        
-        if card[0] not in "23456789TJQKA" or card[1] not in "HSDC":
-            raise Exception("Please use the valid format for cards")
-        
-        self.__cards.append(card)
-
-    def getCards(self):
-        # method to return all private cards a player has in their hand
-        return self.__cards
-    
-    def clearCards(self):
-        self.__cards = []
-    
-    def setMoney(self, nMoney):
-        self.__money = nMoney
-        self.__roundStartMoney = nMoney
+    def addMoney(self, amount):
+        self.__money += amount
 
     def getMoney(self):
         return self.__money
 
-    def addMoney(self, nMoney):
-        self.__money += nMoney
-
     def isBankrupt(self):
-        # function to be run at the start of the game for each players
-        if self.__money <= 0:
-            return True
-        return False
+        return self.__money <= 0
 
-    def check(self, currentPoolRequirement):
-        # input: current pool bet per person for this round
-        # output: True if check is met, False if it is not
+    # ------------------------------
+    # Cards
+    # ------------------------------
+    def giveCard(self, card):
+        if len(self.__cards) >= 2:
+            raise Exception("Player hand is already full")
 
-        bet_difference = currentPoolRequirement - self.__totalGameBet 
-        if bet_difference < 0:
-            raise Exception("The player has already bet more than is required for this round")
+        if len(card) != 2 or card[0] not in "23456789TJQKA" or card[1] not in "HSDC":
+            raise Exception("Invalid card format")
 
-        if self.__money <= bet_difference:
-            # Logic for going all in
-            self.letRoundBetBe(self.__money)
-            self.__money = 0
-            self.__isAllIn = True
-            return "allin"
-    
-        self.__money = self.__roundStartMoney - bet_difference
-        return "checkok"
-    
-    def raiseTo(self, betAmount, minibet):
+        self.__cards.append(card)
 
-        # logic to check if betAmount is greater than the max bet for this round
-        # DOES NOT CURRENTLY WORK
-        if betAmount == minibet:
-            raise Exception("Cannot raise to the existing bet. Please use Player.check() instead")
-        
-        if betAmount < minibet:
-            raise Exception("Cannot raise to a value less than the existing bet." \
-            "Please input something greater than" + str(minibet))
-        
-        if betAmount > self.__money:
-            raise Exception("Player does not have enough money to make this raise")
-        
-        # ELSE RAISE LOGIC GOES HERE
-        self.__money = self.__roundStartMoney - betAmount
-        self.letRoundBetBe(betAmount)
-        return True
-    
-    def revealBalance(self):
-        print("Balance:", self.__money)
+    def getCards(self):
+        return list(self.__cards)
 
-    def revealExistingBet(self):
-        print("Current bet:", self.__roundStartMoney - self.__money)
-    
-    def bet(self, minibet):
-        # input: minibet - smallest possible bet permissible
-        # output: true if successful
-        self.revealBalance()
-        self.revealExistingBet()
-        if minibet > self.__money and self.__money != 0:
-            choice = input("You are due to pay more than you have. Would you like to (A)ll in or (F)old").lower()
-            if choice == "f":
-                self.fold()
-                return True
-            elif choice == "a":
-                self.check(minibet) # go all in
-                self.__isAllIn = True
-                return True
-            else:
-                raise Exception()
-            
-        # if player ran out of money earlier this round
-        try:
-            assert (minibet > self.__money and self.__money == 0 and self.__roundStartMoney != 0) == self.__isAllIn
-        except:
-            print((minibet > self.__money and self.__money == 0 and self.__roundStartMoney != 0))
-            print(self.__isAllIn)
+    # ------------------------------
+    # Betting
+    # ------------------------------
+    def bet(self, minBet):
+        """Handles player betting for one turn."""
+        if self.__isFolded or self.__isAllIn:
+            print("Player cannot act (folded or all-in).")
+            return False
 
-            
-        if minibet > self.__money and self.__money == 0 and self.__roundStartMoney != 0:
-            print("Turn being skipped for this player")
+        if self.__money == 0:
+            print("Player has no money. Automatically passing.")
             return True
 
-        betAmount = input("Stake (minimum " + str(minibet) + "): ")
-        is_int_amount = False
+        print(f"You have ${self.__money}. Minimum to call is ${minBet}.")
+        print("Enter -1 to fold, 0 to call/check, or a positive number to raise:")
 
-        while not is_int_amount:
-            try: 
-                betAmount = int(betAmount)
-                is_int_amount = True
-            except:
-                betAmount = input("Please input an integer! Stake: ")
+        while True:
+            try:
+                choice = int(input("Your bet: "))
+                break
+            except ValueError:
+                print("Please enter an integer.")
 
-        if betAmount == -1:
+        if choice == -1:
             self.fold()
+            print("Player folds.")
             return True
 
-        # if bet is too large for balance or too small to match
-        while betAmount > self.__money or betAmount < minibet:
-            betAmount = int(input("Bet error! Stake (minimum " + str(minibet) + "): "))
+        elif choice == 0:
+            # call/check
+            betAmount = min(minBet, self.__money)
+            self.__money -= betAmount
+            self.__betRound += betAmount
+            self.__betGame += betAmount
+            if self.__money == 0:
+                self.__isAllIn = True
+            print(f"Player calls with ${betAmount}.")
+            return True
 
-        # if they are checking (updating their bet to the same as the minimum for this round)
-        if betAmount == minibet:
-            match self.check(minibet):
-                case "checkok":
-                    return betAmount
-                case "allin":
-                    print("Player has gone all in!")
-                    self.__isAllIn = True
-                    return self.__totalGameBet
-        else:
-            if self.raiseTo(betAmount, minibet):
-                return betAmount
-        
-        raise Exception()
-    
-    def totalGameBet(self):
-        return self.__totalGameBet
-    
+        elif choice > 0:
+            if choice >= self.__money:
+                choice = self.__money
+                self.__isAllIn = True
+                print("Player goes all-in!")
+
+            self.__money -= choice
+            self.__betRound += choice
+            self.__betGame += choice
+            print(f"Player bets ${choice}.")
+            return True
+
+    # ------------------------------
+    # Getters for Bets
+    # ------------------------------
+    def getBetForThisRound(self):
+        return self.__betRound
+
+    def getBetForThisGame(self):
+        return self.__betGame
+
+    # ------------------------------
+    # Fold / All-in
+    # ------------------------------
     def fold(self):
         self.__isFolded = True
 
     def isFolded(self):
         return self.__isFolded
-    
-    def roundPass(self): 
-        # special function to run in a round after a player has gone all-in and now has no choices for the rest of the game
-        pass
+
+    def isAllIn(self):
+        return self.__isAllIn
