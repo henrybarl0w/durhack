@@ -34,4 +34,4 @@ for i in range(4):
 #game.betting(0)
 
 game.betting(5)
-game.findBestHand()
+print(game.findBestHand())

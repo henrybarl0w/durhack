@@ -47,28 +47,30 @@ class Dealer():
         # set the pointer to the first item in the players list, whom will be dealt to first (little blind)
         index = self.little
 
-        bets = [None for i in range(len(self.players))]
+        bets = [None for _ in range(len(self.players))]
 
         # boolean to check that we are still going through the players for the first time
-        neverCompletedList = index < self.little+len(self.players)
+        
 
         # boolean to check that non-folded players have still not reached a bet consensus for this round
-        betsUnequal = not self.equalBets(bets)
+        
 
-        while neverCompletedList or betsUnequal:
-            player = self.players[index % len(self.players)]
+        while index < self.little+len(self.players) or not self.equalBets(bets.copy()):
+            i = index % len(self.players)
+            player = self.players[i]
 
             if player.isFolded(): 
                 continue
-
+            
             print('Player ', index % len(self.players))
             betSize = player.bet(self.minBet)
             if betSize == -1: 
                 player.fold()
             elif betSize > self.minBet: 
                 self.minBet = betSize
-                bets[index % len(self.players)] = betSize
-            else: bets[index % len(self.players)] = betSize
+                bets[i] = betSize
+            else: 
+                bets[i] = betSize
             index += 1
 
         # Add all bets from this round to the pot
@@ -178,7 +180,8 @@ class Dealer():
             for i in range(len(cards)):
                 for j in range(i,len(cards)):
                     hand = []
-                    for k in range(len(cards)):
+                    for k in range(5):
                         if k not in [i,j]:
                             hand.append(cards[k])
                     hands.append(hand)
+        return hands
