@@ -21,8 +21,8 @@ class Dealer():
     # Deal two cards to every player
     def deal(self):
         random.shuffle(self.deck)
-        for player in self.players:
-            player.giveCard()
+        for _ in range(2): 
+            for player in self.players: player.giveCard(self.deck.pop())
         pass
 
     # Deals with a round of betting and shows n number of cards at the start
@@ -38,17 +38,17 @@ class Player():
         # method to give a card to a player
 
         # ensure that the hand is not already full
-        if len(self.cards) >= 2:
+        if len(self.__cards) >= 2:
             raise Exception("Player hand is already full")
         
         # ensure the card is in the valid format, eg 2S, AQ
         if len(card) != 2:
             raise Exception("Please use the valid format for cards")
         
-        if card[0] not in "23456789JQKA" or card[1] not in "HSDC":
+        if card[0] not in "23456789TJQKA" or card[1] not in "HSDC":
             raise Exception("Please use the valid format for cards")
         
-        self.cards.append(card)
+        self.__cards.append(card)
 
     def getCards(self):
         # method to return all private cards a player has in their hand
@@ -66,3 +66,8 @@ class Player():
             return True
         return False
 
+# Test
+game = Dealer()
+for _ in range(4): game.players.append(Player())
+game.deal()
+for i in range(4): print(game.players[i].getCards())
