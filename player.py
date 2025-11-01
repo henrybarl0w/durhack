@@ -3,9 +3,11 @@ class Player():
         self.__cards = []
         self.__money = 0
         self.__totalGameBet = 0
+        self.__inRound = True
 
     def gameReset(self):
         self.__totalGameBet = 0
+        self.__inRound = True
         
     def giveCard(self, card):
         # method to give a card to a player
@@ -69,5 +71,19 @@ class Player():
             raise Exception("Cannot raise to a value less than the existing bet." \
             "Please input something greater than" + str(Game.Round.maxbet))
         
+        if betAmount > self.__money:
+            raise Exception("Player does not have enough money to make this raise")
+        
         # ELSE RAISE LOGIC GOES HERE
+        self.__money -= betAmount
+        return True
+    
+    def fold(self):
+        self.__inRound = False
+
+    def isInRound(self):
+        return self.__inRound
+    
+    def roundPass(self): 
+        # special function to run in a round after a player has gone all-in and now has no choices for the rest of the game
         pass
