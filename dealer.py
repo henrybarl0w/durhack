@@ -202,4 +202,5 @@ class Dealer():
             if a > rank[0] or (a == rank[0] and (b > rank[1] or (b == rank[1] and self.draw(hand, bestHand)))):
                 rank = (a, b)
                 bestHand = hand
-        print(bestHand, rank, bestHands.index(bestHand))
+                
+        return bestHands.index(bestHand)

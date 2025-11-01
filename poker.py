@@ -34,4 +34,8 @@ for i in range(4):
 #game.betting(0)
 
 game.betting(5)
-game.findBestHand()
+winner = game.findBestHand()
+game.players[winner].addMoney(game.pot)
+
+for p in game.players:
+    print(p.getMoney())
