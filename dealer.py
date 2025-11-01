@@ -68,6 +68,8 @@ class Dealer():
                 continue
             
             print('\n\n\nPlayer ', index % len(self.players))
+            print(player.getCards())
+
             betSize = player.bet(self.minBet)
             if betSize == -1: 
                 player.fold()

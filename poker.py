@@ -13,16 +13,11 @@ for _ in range(4):
 for i in range(len(game.players)):
     (game.players)[i].setMoney(INITIALMONEY)
 
-print("AAAAAAAAAAAA", game.players[0].getMoney())
 # deal the cards to each player
 game.deal()
 
-# display the cards of each player to the screen
-for i in range(4): 
-    print(game.players[i].getCards())
 
 # start the pre-flop betting (0 = preflop, 3 = flop, 4 = turn, 5 = river)
-# game.betting(0)
 
 game.betting(0)
 game.betting(3)
@@ -36,6 +31,8 @@ for p in game.players:
     print(p.getMoney())
     p.roundReset()
 
+game.reset()
+game.deal()
 game.betting(5)
 
 
