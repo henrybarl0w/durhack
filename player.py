@@ -10,7 +10,7 @@ class Player():
         self.__totalRoundBet = 0
 
     def roundReset(self):
-        self.__roundStartMoney = self.__money
+        self.__totalRoundBet = 0
         # REQUEST: CALL Player.roundReset() after every round in Dealer.betting()
 
     def addToRoundBet(self, nAmount):
