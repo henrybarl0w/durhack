@@ -206,3 +206,63 @@ class Dealer():
                 bestHand = hand
 
         return bestHands.index(bestHand)
+    
+    def split_winnings(self):
+        # function to split the winnings among each player looking at how much they have put in, and ties and wins
+        # gather all-in thresholds (amounts they’ve contributed)
+        all_ins = []
+        active_players = []
+
+        for player in self.players:
+            if player.isFolded():
+                continue
+            active_players.append(player)
+
+            if player.isAllIn():
+                all_ins.append(player.getBetForThisRound())
+
+        # include largest bet (covers players who never went all-in)
+        max_bet = max([p.getBetForThisRound() for p in active_players], default=0)
+        if max_bet not in all_ins:
+            all_ins.append(max_bet)
+
+        # sort ascending so we can build pots from smallest to largest
+        all_ins.sort()
+
+        # Construct side pots
+        pots = []
+        prev_level = 0
+        remaining_players = active_players.copy()
+
+        for level in all_ins:
+            # pot amount is (level - prev_level) * number_of_players_remaining
+            pot_amount = (level - prev_level) * len(remaining_players)
+            pots.append({
+                "amount": pot_amount,
+                "eligible_players": remaining_players.copy()
+            })
+
+            # remove players who only contributed up to this all-in level
+            remaining_players = [p for p in remaining_players if p.getBetForThisRound() > level]
+            prev_level = level
+
+        total_pot_from_calc = sum(p["amount"] for p in pots)
+        assert total_pot_from_calc == self.pot
+
+        # Distribute pots
+        for i, pot in enumerate(pots):
+            eligible = pot["eligible_players"]
+            amount = pot["amount"]
+
+            # determine winner(s) for this pot — assumes external function exists
+            winners = self.determine_winners(eligible)
+
+            # split evenly among all winners
+            split_amount = amount / len(winners)
+            for w in winners:
+                w.addMoney(split_amount)
+
+            print(f"Pot {i+1}: ${amount:.2f} split among {[str(w) for w in winners]}")
+
+        # clear the pot at the end
+        self.pot = 0

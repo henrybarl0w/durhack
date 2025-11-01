@@ -14,6 +14,9 @@ class Player():
     def letRoundBetBe(self, nAmount):
         self.__totalRoundBet = nAmount
 
+    def getBetForThisRound(self):
+        return self.__totalRoundBet
+
     def isAllIn(self):
         return self.__isAllIn
 
