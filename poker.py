@@ -30,8 +30,6 @@ for p in game.players:
 
 game.reset()
 game.deal()
-game.betting(5)
-
 
 winner = game.findBestHand()
 game.players[winner].addMoney(game.pot)

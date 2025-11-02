@@ -109,7 +109,7 @@ class Dealer():
         def post(player, amount):
             stake = amount if player.getMoney() >= amount else player.getMoney()
             player.addMoney(-stake)
-            player.addToRoundBet(stake)
+            player.letRoundBetBe(stake)
             self.pot += stake
             if player.getMoney() == 0:
                 player._Player__isAllIn = True

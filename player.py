@@ -16,10 +16,6 @@ class Player():
     def addToRoundBet(self, nAmount):
         self.__totalRoundBet += nAmount
 
-    def hasPlayedThisRound(self):
-        self.__hasPlayedThisRound = True
-
-
     def getBetForThisRound(self):
         return self.__totalRoundBet
 
@@ -116,7 +112,6 @@ class Player():
                         choiceMade = True
                     except:
                         print("Must be an integer")
-
 
                 # check
                 if choice == minibet - self.__totalRoundBet:
