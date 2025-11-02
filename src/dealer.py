@@ -51,10 +51,8 @@ class Dealer():
 
         if n == 0:
             self.postBlinds()
-            index = self.little + 2
-        else:
-            index = self.little
-
+            index += 2
+            
         bets = [None for _ in range(len(self.players))]
 
         # boolean to check that we are still going through the players for the first time
