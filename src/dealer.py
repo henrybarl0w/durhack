@@ -140,6 +140,7 @@ class Dealer():
         return h
 
     def rankHand(self, h):
+        if h is None: return (0, 0)
         if len(h) != 5: return (0, 0) #'invalid hand'
         h = self.orderHand(h)
         cardOrder = ['2','3','4','5','6','7','8','9','T','J','Q','K','A']
