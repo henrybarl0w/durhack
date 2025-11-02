@@ -157,6 +157,8 @@ class Dealer():
                 consecutive = False
                 break
             last = current
+        if (h[0][0:1] == '2' and h[1][0:1] == '3' and h[2][0:1] == '4' and h[3][0:1] == '5' and h[4][0:1] == 'A'):
+            consecutive = True
 
         if sameSuit and consecutive:
             if h[4][0:1] == 'A': return (10, 0) #'royal flush'
@@ -189,7 +191,7 @@ class Dealer():
         if sameSuit:
             return (6, 0) #'flush'
         
-        if consecutive or (h[0][0:1] == '2' and h[1][0:1] == '3' and h[2][0:1] == '4' and h[3][0:1] == '5' and h[4][0:1] == 'A'):
+        if consecutive:
             return (5, 0) #'straight'
         
         if m == 3:
