@@ -24,6 +24,7 @@ game.betting(5)
 winner = game.findBestHand()
 game.players[winner].addMoney(game.pot)
 
+print(winner)
 for p in game.players:
     print(p.getMoney())
     p.roundReset()
@@ -31,8 +32,4 @@ for p in game.players:
 game.reset()
 game.deal()
 
-winner = game.findBestHand()
-game.players[winner].addMoney(game.pot)
 
-for p in game.players:
-    print(p.getMoney())
